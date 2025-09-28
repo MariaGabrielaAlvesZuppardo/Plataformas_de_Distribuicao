@@ -1,15 +1,21 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/6e31fb87-dcec-49cc-b490-72aae11a8f95" alt="Imagem centralizada" width="134" height="39" />
+# Atividades de Plataformas de Distribuição
 
+## 📌 Atividade 01 – Cliente-Servidor TCP
+Implemente uma aplicação **cliente-servidor** usando **socket TCP** para coletar e exibir, em tempo quase real, métricas de desempenho de vários computadores.  
 
-<p align="center">
-  <strong>Disciplina:</strong> Plataformas de Distribuição.<br>
-  <strong>Professor:</strong> Nelson Souto Rosa.<br>
-  <strong>Integrantes:</strong> Maria Gabriela Alves Zuppardo e Victor Brunno Dantas de Souza Rosas.
-</p>
+- Cada **cliente** atua como um agente instalado em uma máquina a ser monitorada.  
+- Ele coleta periodicamente dados de apenas **um recurso**:  
+  - CPU (percentual de ocupação por núcleo e média geral),  
+  - Memória (total, utilizada, livre),  
+  - Disco (uso de espaço, taxa de leitura/escrita),  
+  - Rede (taxa de upload/download, pacotes perdidos).  
+- As informações são enviadas em intervalos configuráveis (ex.: a cada 5 segundos) para o **servidor**.  
+- O **servidor** mantém conexões persistentes com todos os agentes, armazena os dados em memória e mantém uma lista dos clientes conectados.
 
-<p align= "center">
-  <strong>Enunciado:</strong>
+---
 
-  Implemente uma aplicação cliente-servidor usando socket TCP para coletar e exibir, em tempo quase real, métricas de desempenho de vários computadores. Cada cliente é instalado em uma máquina a ser monitorada e atua como um agente, reunindo periodicamente dados como (escolha apenas um deles para monitorar): uso de CPU (percentual de ocupação por núcleo e média geral), memória (total, utilizada, livre), ´disco (uso de espaço, taxa de leitura/escrita), e rede (taxa de upload/download, pacotes perdidos). Essas informações são enviadas em intervalos configuráveis (por exemplo, a cada 5 segundos) para o servidor, que mantém conexões persistentes com todos os agentes. Por fim, o servidor mantém uma lista de clientes conectados e armazena os dados em memória
-</p>
+## 📌 Atividade 02 – Cliente-Servidor UDP
+Reimplemente a aplicação anterior utilizando **socket UDP**, adaptando o envio e recepção de mensagens sem a necessidade de conexões persistentes.  
+
+O objetivo é comparar o comportamento entre **TCP (confiável, orientado a conexão)** e **UDP (rápido, sem conexão)** no envio de métricas em tempo real.
+
