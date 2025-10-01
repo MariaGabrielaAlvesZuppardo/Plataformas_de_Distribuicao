@@ -4,6 +4,7 @@ import psutil
 import uuid
 import httpx
 import argparse
+import json
 
 
 class MonitoringAgent:
@@ -12,7 +13,7 @@ class MonitoringAgent:
         self.interval = interval
         self.server_url = server_url
 
-        # previous state para taxas
+        # Previous state para cálculo de taxas
         self.prev_disk = psutil.disk_io_counters()
         self.prev_net = psutil.net_io_counters()
         self.prev_time = time.time()
@@ -25,7 +26,6 @@ class MonitoringAgent:
         disk = psutil.disk_usage('/')
         current_disk_io = psutil.disk_io_counters()
         current_net_io = psutil.net_io_counters()
-
         elapsed = max(now - self.prev_time, 1.0)
 
         metrics = {
@@ -46,7 +46,7 @@ class MonitoringAgent:
             }
         }
 
-        # update refs
+        # Atualiza referências
         self.prev_disk = current_disk_io
         self.prev_net = current_net_io
         self.prev_time = now
@@ -61,26 +61,31 @@ class MonitoringAgent:
                     "metrics": metrics,
                     "timestamp": time.time(),
                 }
+
+                # Exibe no terminal de forma legível
+                print(f"\n[INFO] Enviando métricas em {time.strftime('%Y-%m-%d %H:%M:%S')}")
+                print(json.dumps(payload, indent=2))
+
+                # Envia para o servidor
                 try:
                     r = await client.post(self.server_url, json=payload)
                     if r.status_code != 200:
-                        print(f"[WARN] envio falhou: {r.status_code} {r.text}")
-                    else:
-                        print(f"[INFO] enviado {time.strftime('%Y-%m-%d %H:%M:%S')}")
+                        print(f"[WARN] Envio falhou: {r.status_code} {r.text}")
                 except Exception as e:
-                    print(f"[ERROR] ao enviar métricas: {e}")
+                    print(f"[ERROR] Falha ao enviar métricas: {e}")
+
                 await asyncio.sleep(self.interval)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Agente de coleta de métricas")
-    parser.add_argument("--id", help="client id", default=None)
-    parser.add_argument("--interval", type=int, default=5)
-    parser.add_argument("--server", default="http://127.0.0.1:8000/ingest")
+    parser.add_argument("--id", help="Client ID", default=None)
+    parser.add_argument("--interval", type=int, default=5, help="Intervalo de envio (segundos)")
+    parser.add_argument("--server", default="http://127.0.0.1:8000/ingest", help="URL do servidor")
     args = parser.parse_args()
 
     agent = MonitoringAgent(client_id=args.id, interval=args.interval, server_url=args.server)
     try:
         asyncio.run(agent.run())
     except KeyboardInterrupt:
-        print("Agent encerrado")
+        print("\n[INFO] Agent encerrado pelo usuário")
