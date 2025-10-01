@@ -19,3 +19,6 @@ Reimplemente a aplicação anterior utilizando **socket UDP**, adaptando o envio
 
 O objetivo é comparar o comportamento entre **TCP (confiável, orientado a conexão)** e **UDP (rápido, sem conexão)** no envio de métricas em tempo real.
 
+## 📌 Atividade 03 – Cliente-Servidor Protocolo HTTP 
+
+A atividade 03 no caso seria refazer os outros dois client server agora usando o protocolo http 
